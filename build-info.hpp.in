@@ -2,9 +2,9 @@
 
 #include <filesystem>
 
-namespace bi {
+namespace fi {
 
 inline const std::filesystem::path SOURCE_ROOT = "@CMAKE_SOURCE_DIR@";
 inline const std::filesystem::path BUILD_ROOT = "@CMAKE_BINARY_DIR@";
 
-} // namespace bi
+} // namespace fi
