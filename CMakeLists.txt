@@ -16,7 +16,7 @@ endif()
 configure_file(build-info.hpp.in include/fi/build-info.hpp @ONLY)
 
 add_library(fi
-    fi.cpp
+    fs.cpp
     memory_mapped_file.cpp
 )
 target_include_directories(fi PUBLIC

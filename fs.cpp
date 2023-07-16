@@ -80,7 +80,8 @@ fs::path globalConfigPath()
 #endif
 }
 
-std::vector<std::byte> read(const fs::path& path)
+template <class T>
+std::vector<T> read(const fs::path& path)
 {
     if (!fs::exists(path)) {
         throw std::runtime_error{"file does not exist: " + path.string()};
@@ -90,12 +91,13 @@ std::vector<std::byte> read(const fs::path& path)
     input.open(path, std::ios::binary | std::ios::ate);
     const auto fileSize = input.tellg();
     input.seekg(0, std::ios::beg);
-    auto data = std::vector<std::byte>(fileSize);
+    auto data = std::vector<T>(fileSize);
     input.read(reinterpret_cast<char*>(data.data()), fileSize);
     return data;
 }
 
-void write(const fs::path& path, const std::byte* data, size_t size)
+template <class T>
+void write(const fs::path& path, const T* data, size_t size)
 {
     auto output = std::ofstream{path, std::ios::binary};
     output.exceptions(std::ios::badbit | std::ios::failbit);
@@ -104,9 +106,22 @@ void write(const fs::path& path, const std::byte* data, size_t size)
         static_cast<std::streamsize>(size));
 }
 
-void write(const fs::path& path, const std::span<const std::byte>& data)
+template <class T>
+void write(const fs::path& path, const std::span<const T>& data)
 {
     write(path, data.data(), data.size());
 }
 
+template std::vector<std::byte> read<std::byte>(const fs::path& path);
+template std::vector<unsigned char> read<unsigned char>(const fs::path& path);
+
+template void write<std::byte>(
+    const fs::path& path, const std::byte* data, size_t size);
+template void write<unsigned char>(
+    const fs::path& path, const unsigned char* data, size_t size);
+
+template void write<std::byte>(
+    const fs::path& path, const std::span<const std::byte>& data);
+template void write<unsigned char>(
+    const fs::path& path, const std::span<const unsigned char>& data);
 } // namespace fi
